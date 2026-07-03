@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Flipped Garage background pattern">
+  <defs>
+    <pattern id="chev" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
+      <g fill="none" stroke="#1a1a17" stroke-width="2" stroke-linecap="round" opacity="0.10">
+        <path d="M0,20 L30,5 L60,20"/>
+        <path d="M0,40 L30,25 L60,40"/>
+        <path d="M0,60 L30,45 L60,60"/>
+      </g>
+      <circle cx="30" cy="52" r="1.6" fill="#2f5875" opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="120" height="120" fill="#f5f1e0"/>
+  <rect width="120" height="120" fill="url(#chev)"/>
+</svg>
