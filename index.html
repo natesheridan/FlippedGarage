@@ -77,13 +77,36 @@
     header { position:sticky; top:0; z-index:60; background:rgba(245,241,224,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); transform:translateY(-100%); animation:navDrop .6s ease 3.7s forwards; }
     .nav { display:flex; align-items:center; justify-content:space-between; height:74px; }
     .nav .brand-logo { height:52px; width:auto; }
+    .nav-right { display:flex; align-items:center; gap:14px; }
     .nav-links { display:flex; gap:24px; align-items:center; }
     .nav-links a { color:var(--ink-soft); font-size:15px; font-weight:600; position:relative; }
     .nav-links a:not(.btn)::after { content:""; position:absolute; left:0; right:100%; bottom:-4px; height:2px; background:var(--steel); transition:right .25s ease; }
     .nav-links a:not(.btn):hover::after { right:0; }
     .nav-links a:hover { color:var(--ink); }
     @keyframes navDrop { to{ transform:translateY(0);} }
-    @media (max-width:940px){ .nav-links a:not(.btn){ display:none; } }
+
+    /* hamburger button */
+    .nav-toggle { display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; padding:0; background:none; border:none; cursor:pointer; }
+    .nav-toggle span { display:block; width:24px; height:2px; background:var(--ink); border-radius:2px; transition:transform .3s ease, opacity .2s ease; }
+    .nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2){ opacity:0; }
+    .nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+    /* mobile dropdown menu */
+    .mobile-menu { position:absolute; top:100%; left:0; right:0; z-index:59; background:rgba(245,241,224,0.98); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); box-shadow:0 22px 44px -26px rgba(0,0,0,.5); display:flex; flex-direction:column; padding:6px 24px 20px; opacity:0; transform:translateY(-10px); pointer-events:none; transition:opacity .22s ease, transform .22s ease; }
+    .mobile-menu.open { opacity:1; transform:none; pointer-events:auto; }
+    .mobile-menu a { padding:15px 4px; font-family:var(--display); font-size:18px; font-weight:700; color:var(--ink-soft); border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px; }
+    .mobile-menu a .ic { color:var(--steel); width:18px; height:18px; flex:0 0 auto; }
+    .mobile-menu a:active { color:var(--ink); }
+    .mobile-menu .mobile-cta { display:flex; gap:12px; margin-top:16px; }
+    .mobile-menu .mobile-cta .btn { flex:1; justify-content:center; }
+    @media (min-width:941px){ .mobile-menu{ display:none; } }
+    @media (max-width:940px){
+      .nav-links a:not(.btn){ display:none; }
+      .nav-toggle{ display:inline-flex; }
+      .nav .pnum{ display:none; }
+      .nav-links .btn.steel{ padding:11px 13px; }
+    }
 
     /* hero */
     .hero { position:relative; overflow:hidden; padding:90px 0 120px; }
@@ -304,14 +327,30 @@
   <header>
     <div class="wrap nav">
       <a href="#top"><img class="brand-logo" src="assets/logos/flipped-garage-horizontal.svg" alt="Flipped Garage LLC" /></a>
-      <nav class="nav-links">
-        <a href="#services">Services</a>
-        <a href="#sell">Sell Your Car</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#reviews">Reviews</a>
-        <a href="#faq">FAQ</a>
-        <a href="tel:+14056737574" class="btn steel"><svg class="ic"><use href="#i-phone"/></svg> (405) 673-7574</a>
-      </nav>
+      <div class="nav-right">
+        <nav class="nav-links">
+          <a href="#services">Services</a>
+          <a href="#sell">Sell Your Car</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#reviews">Reviews</a>
+          <a href="#faq">FAQ</a>
+          <a href="tel:+14056737574" class="btn steel"><svg class="ic"><use href="#i-phone"/></svg> <span class="pnum">(405) 673-7574</span></a>
+        </nav>
+        <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#services" onclick="closeMenu()"><svg class="ic"><use href="#i-wrench"/></svg> Services</a>
+      <a href="#sell" onclick="closeMenu()"><svg class="ic"><use href="#i-cash"/></svg> Sell Your Car</a>
+      <a href="#gallery" onclick="closeMenu()"><svg class="ic"><use href="#i-image"/></svg> Gallery</a>
+      <a href="#reviews" onclick="closeMenu()"><svg class="ic"><use href="#i-shield"/></svg> Reviews</a>
+      <a href="#faq" onclick="closeMenu()"><svg class="ic"><use href="#i-clipboard"/></svg> FAQ</a>
+      <div class="mobile-cta">
+        <a href="tel:+14056737574" class="btn steel" onclick="closeMenu()"><svg class="ic"><use href="#i-phone"/></svg> Call</a>
+        <a href="sms:+14056737574" class="btn ghost" onclick="closeMenu()"><svg class="ic"><use href="#i-message"/></svg> Text</a>
+      </div>
     </div>
   </header>
 
@@ -568,6 +607,22 @@
     } else {
       document.querySelectorAll('.reveal,.r-flip,.r-left,.r-right,.r-zoom').forEach(function(el){ el.classList.add('in'); });
     }
+
+    // ---- mobile nav menu ----
+    function toggleMenu(){
+      var m=document.getElementById('mobileMenu'), t=document.getElementById('navToggle');
+      var open=m.classList.toggle('open'); t.classList.toggle('open', open);
+      t.setAttribute('aria-expanded', open?'true':'false');
+    }
+    function closeMenu(){
+      var m=document.getElementById('mobileMenu'), t=document.getElementById('navToggle');
+      if(!m) return; m.classList.remove('open'); t.classList.remove('open'); t.setAttribute('aria-expanded','false');
+    }
+    document.addEventListener('click', function(e){
+      var h=document.querySelector('header');
+      if(h && !h.contains(e.target)) closeMenu();
+    });
+    window.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
   </script>
 </body>
 </html>
